@@ -1,60 +1,53 @@
-package parser
+package judges
 
 import (
 	"regexp"
 	"strings"
+
+	"github.com/Sovianum/hustleScrape/parser"
 )
 
 var judgeRegexp = regexp.MustCompile(`^\d+\s\((?P<JudgeLabel>.)\)\s-\s(?P<JudgeName>.*)`)
 
-type JudgeLabel string
-
-type BlockDataJudges struct {
-	MainJudge string
-	Judges    map[JudgeLabel]string
-}
-
 type JudgeBlockParser struct {
 	mainJudgeHeaderFlag bool
 
-	data BlockDataJudges
+	data BlockData
 }
 
 func NewJudgeBlockParser() *JudgeBlockParser {
 	return &JudgeBlockParser{
-		data: BlockDataJudges{
-			Judges: make(map[JudgeLabel]string),
+		data: BlockData{
+			Judges: make(map[parsers.JudgeLabel]string),
 		},
 	}
 }
 
-func (p *JudgeBlockParser) Process(line string) (LineProcessingStatus, error) {
+func (p *JudgeBlockParser) Process(line string) (parsers.LineProcessingStatus, error) {
 	switch {
 	case strings.HasPrefix(line, "главный судья"):
 		p.mainJudgeHeaderFlag = true
-		return LineProcessingStatusOk, nil
+		return parsers.LineProcessingStatusOk, nil
 
 	case p.mainJudgeHeaderFlag:
 		p.data.MainJudge = strings.TrimSpace(line)
 		p.mainJudgeHeaderFlag = false
-		return LineProcessingStatusOk, nil
+		return parsers.LineProcessingStatusOk, nil
 
 	case strings.HasPrefix(line, "судейская бригада"):
-		return LineProcessingStatusOk, nil
+		return parsers.LineProcessingStatusOk, nil
 
 	default:
 		submatches := judgeRegexp.FindStringSubmatch(line)
 		if len(submatches) == 0 {
-			return LineProcessingStatusAnotherBlock, nil
+			return parsers.LineProcessingStatusAnotherBlock, nil
 		}
 
-		p.data.Judges[JudgeLabel(submatches[1])] = submatches[2]
-		return LineProcessingStatusOk, nil
+		p.data.Judges[parsers.JudgeLabel(submatches[1])] = submatches[2]
+		return parsers.LineProcessingStatusOk, nil
 	}
 }
 
-func (p *JudgeBlockParser) GetData() BlockData {
-	return BlockData{
-		Judges: &p.data,
-	}
+func (p *JudgeBlockParser) GetData() parsers.BlockData {
+	return &p.data
 }
