@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/Sovianum/hustleScrape/blocksplit"
 	"github.com/Sovianum/hustleScrape/loading"
 	"github.com/Sovianum/hustleScrape/parsing"
@@ -48,5 +46,7 @@ func main() {
 
 	tables := structuring.GroupToTables(structuredData)
 
-	fmt.Println(tables)
+	if err := tables.Write("/tmp/hustle"); err != nil {
+		panic(err)
+	}
 }

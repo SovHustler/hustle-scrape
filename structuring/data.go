@@ -1,40 +1,67 @@
 package structuring
 
-import "github.com/Sovianum/hustleScrape/domain"
+import (
+	"strconv"
+
+	"github.com/Sovianum/hustleScrape/domain"
+)
 
 type Data interface {
-	dataMarker()
+	ToStrings() []string
 }
 
 type Competition struct {
-	Data
-
 	ID   domain.CompetitionID
 	Name string
 }
 
-type Category struct {
-	Data
+func (c Competition) ToStrings() []string {
+	return []string{
+		string(c.ID), c.Name,
+	}
+}
 
+type Category struct {
 	ID            domain.CategoryID
 	CompetitionID domain.CompetitionID
 	Type          domain.CategoryType
 	Sex           domain.Sex
 }
 
-type Participant struct {
-	Data
+func (c Category) ToStrings() []string {
+	return []string{
+		string(c.ID),
+		string(c.CompetitionID),
+		string(c.Type),
+		string(c.Sex),
+	}
+}
 
+type Participant struct {
 	ID   domain.ParticipantID
 	Name string
 }
 
-type ParticipantResult struct {
-	Data
+func (p Participant) ToStrings() []string {
+	return []string{
+		string(p.ID),
+		p.Name,
+	}
+}
 
+type ParticipantResult struct {
 	ParticipantID domain.ParticipantID
 	CategoryID    domain.CategoryID
 	PlaceRange    PlaceRange
+}
+
+func (p ParticipantResult) ToStrings() []string {
+	return []string{
+		string(p.ParticipantID),
+		string(p.CategoryID),
+		strconv.Itoa(p.PlaceRange.Lower),
+		strconv.Itoa(p.PlaceRange.Upper),
+	}
 }
 
 type PlaceRange struct {
@@ -43,8 +70,6 @@ type PlaceRange struct {
 }
 
 type Cross struct {
-	Data
-
 	ParticipantID domain.ParticipantID
 	CompetitionID domain.CompetitionID
 	JudgeName     domain.JudgeName
@@ -52,11 +77,26 @@ type Cross struct {
 	Phase         domain.CompetitionPhase
 }
 
-type Judge struct {
-	Data
+func (c Cross) ToStrings() []string {
+	return []string{
+		string(c.ParticipantID),
+		string(c.CompetitionID),
+		string(c.JudgeName),
+		string(c.CategoryID),
+		strconv.Itoa(int(c.Phase)),
+	}
+}
 
+type Judge struct {
 	CompetitionID domain.CompetitionID
 	CategoryID    domain.CategoryID
-	Label         domain.JudgeLabel
 	Name          domain.JudgeName
+}
+
+func (j Judge) ToStrings() []string {
+	return []string{
+		string(j.CompetitionID),
+		string(j.CategoryID),
+		string(j.Name),
+	}
 }

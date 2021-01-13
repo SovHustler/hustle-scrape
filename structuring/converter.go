@@ -82,7 +82,6 @@ func (c *Converter) consumeCategoryData(data category.Data) []Data {
 		result = append(result, Judge{
 			CompetitionID: c.competitionID,
 			CategoryID:    c.currentCategoryID,
-			Label:         j.Label,
 			Name:          j.Name,
 		})
 	}
