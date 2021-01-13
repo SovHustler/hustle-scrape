@@ -42,9 +42,19 @@ func (p *parser) Process(line string) (parsing.LineProcessingStatus, error) {
 			return parsing.LineProcessingStatusAnotherBlock, nil
 		}
 
+		label := domain.JudgeLabel(submatches[1])
+
+		switch label { // substitute english letters
+		case "в":
+			label = "b"
+
+		case "с":
+			label = "c"
+		}
+
 		p.data.Judges = append(p.data.Judges, Judge{
-			Label: domain.JudgeLabel(submatches[1]),
-			Name:  submatches[2],
+			Label: label,
+			Name:  domain.JudgeName(submatches[2]),
 		})
 
 		return parsing.LineProcessingStatusOk, nil

@@ -16,7 +16,8 @@ import (
 type Converter struct {
 	competitionID domain.CompetitionID // TODO fill in
 
-	participantMatching map[domain.CompetitionParticipantID]domain.ParticipantID
+	participantMatching  map[domain.CompetitionParticipantID]domain.ParticipantID
+	currentJudgesMapping map[domain.JudgeLabel]domain.JudgeName
 
 	currentJudges     judges.Data
 	currentCategoryID domain.CategoryID
@@ -56,6 +57,13 @@ func (c *Converter) Convert(data parsing.Data) []Data {
 
 func (c *Converter) consumeJudgesData(data judges.Data) []Data {
 	c.currentJudges = data
+
+	c.currentJudgesMapping = map[domain.JudgeLabel]domain.JudgeName{}
+	for _, j := range data.Judges {
+		j := j
+		c.currentJudgesMapping[j.Label] = j.Name
+	}
+
 	return nil
 }
 
@@ -111,7 +119,7 @@ func (c *Converter) consumePreFinalData(data prefinal.Data) []Data {
 		result = append(result, Cross{
 			ParticipantID: id,
 			CompetitionID: c.competitionID,
-			JudgeLabel:    label,
+			JudgeName:     c.currentJudgesMapping[label],
 			CategoryID:    c.currentCategoryID,
 			Phase:         c.currentPhase,
 		})

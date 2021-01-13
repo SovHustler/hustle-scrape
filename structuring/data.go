@@ -47,7 +47,7 @@ type Cross struct {
 
 	ParticipantID domain.ParticipantID
 	CompetitionID domain.CompetitionID
-	JudgeLabel    domain.JudgeLabel
+	JudgeName     domain.JudgeName
 	CategoryID    domain.CategoryID
 	Phase         domain.CompetitionPhase
 }
@@ -58,5 +58,5 @@ type Judge struct {
 	CompetitionID domain.CompetitionID
 	CategoryID    domain.CategoryID
 	Label         domain.JudgeLabel
-	Name          string
+	Name          domain.JudgeName
 }

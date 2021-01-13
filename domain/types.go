@@ -29,3 +29,5 @@ type CompetitionParticipantID string
 type CompetitionPhase int
 
 type JudgeLabel string
+
+type JudgeName string // it is not a very good key, but...

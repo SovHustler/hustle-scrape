@@ -14,5 +14,5 @@ type Data struct {
 
 type Judge struct {
 	Label domain.JudgeLabel
-	Name  string
+	Name  domain.JudgeName
 }
