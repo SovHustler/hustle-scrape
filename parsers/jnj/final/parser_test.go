@@ -30,7 +30,7 @@ func (s *ParserTestSuite) TestJNJ() {
 	s.CheckStatus(p, parsers.LineProcessingStatusOk, "--------+-------------------+---------")
 
 	data := p.GetData()
-	s.EqualValues(&BlockData{
+	s.EqualValues(BlockData{
 		Places: []ParticipantPlaces{
 			{
 				ParticipantID: "109",
@@ -53,5 +53,5 @@ func (s *ParserTestSuite) TestJNJ() {
 				},
 			},
 		},
-	}, data.(*BlockData))
+	}, data.(BlockData))
 }

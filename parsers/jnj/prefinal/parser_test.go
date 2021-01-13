@@ -26,7 +26,7 @@ func (s *TechTestSuite) TestJNJ() {
 	s.CheckStatus(p, parsers.LineProcessingStatusOk, "--------+---------------------------------")
 
 	data := p.GetData()
-	s.EqualValues(&BlockData{
+	s.EqualValues(BlockData{
 		Crosses: []ParticipantCrossesJNJ{
 			{
 				ParticipantID:      "109",
@@ -39,5 +39,5 @@ func (s *TechTestSuite) TestJNJ() {
 				SecondDanceCrosses: []parsers.JudgeLabel{},
 			},
 		},
-	}, data.(*BlockData))
+	}, data.(BlockData))
 }

@@ -1,9 +1,9 @@
 package judges
 
-import "github.com/Sovianum/hustleScrape/parser"
+import "github.com/Sovianum/hustleScrape/parsers"
 
-type BlockData struct {
-	parsers.BlockData
+type DataBlock struct {
+	parsers.DataBlock
 
 	MainJudge string
 	Judges    map[parsers.JudgeLabel]string

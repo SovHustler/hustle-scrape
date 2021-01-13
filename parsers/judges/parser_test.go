@@ -3,7 +3,7 @@ package judges
 import (
 	"testing"
 
-	"github.com/Sovianum/hustleScrape/parser"
+	"github.com/Sovianum/hustleScrape/parsers"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -25,7 +25,7 @@ func (s *JudgesTestSuite) TestJudgeRegexp() {
 }
 
 func (s *JudgesTestSuite) TestJudgeParser() {
-	p := NewJudgeBlockParser()
+	p := NewParser()
 
 	s.CheckStatus(p, parsers.LineProcessingStatusOk, "главный судья:")
 	s.CheckStatus(p, parsers.LineProcessingStatusOk, " катунин павел")
@@ -35,11 +35,11 @@ func (s *JudgesTestSuite) TestJudgeParser() {
 	s.CheckStatus(p, parsers.LineProcessingStatusAnotherBlock, "dnd beginner (нерейтинг) (партнеры). участников: 17")
 
 	data := p.GetData()
-	s.EqualValues(&BlockData{
+	s.EqualValues(DataBlock{
 		MainJudge: "катунин павел",
 		Judges: map[parsers.JudgeLabel]string{
 			"a": "катунин павел",
 			"в": "николаева екатерина",
 		},
-	}, data.(*BlockData))
+	}, data.(DataBlock))
 }
