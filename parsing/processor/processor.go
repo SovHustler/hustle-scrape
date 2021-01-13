@@ -1,15 +1,19 @@
-package parsing
+package processor
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/Sovianum/hustleScrape/parsing"
+)
 
 type Processor struct {
-	parsers       []Parser
-	currentParser Parser
+	parsers       []parsing.Parser
+	currentParser parsing.Parser
 
-	dataBlocks []Data
+	dataBlocks []parsing.Data
 }
 
-func NewProcessor(parsers []Parser) *Processor {
+func NewProcessor(parsers []parsing.Parser) *Processor {
 	return &Processor{
 		parsers: parsers,
 	}
@@ -32,10 +36,10 @@ func (p *Processor) Process(line string) error {
 	}
 
 	switch status {
-	case LineProcessingStatusOk:
+	case parsing.LineProcessingStatusOk:
 		return nil
 
-	case LineProcessingStatusAnotherBlock:
+	case parsing.LineProcessingStatusAnotherBlock:
 		p.dataBlocks = append(p.dataBlocks, p.currentParser.GetData())
 		p.currentParser.Reset()
 
@@ -52,11 +56,11 @@ func (p *Processor) Process(line string) error {
 	}
 }
 
-func (p *Processor) GetData() []Data {
+func (p *Processor) GetData() []parsing.Data {
 	return p.dataBlocks
 }
 
-func (p *Processor) selectNewParser(line string) (Parser, error) {
+func (p *Processor) selectNewParser(line string) (parsing.Parser, error) {
 	for _, parser := range p.parsers {
 		parser := parser
 
@@ -65,7 +69,7 @@ func (p *Processor) selectNewParser(line string) (Parser, error) {
 			return nil, err
 		}
 
-		if status == LineProcessingStatusOk {
+		if status == parsing.LineProcessingStatusOk {
 			return parser, nil
 		}
 	}
