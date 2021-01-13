@@ -5,7 +5,8 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/Sovianum/hustleScrape/parsers"
+	"github.com/Sovianum/hustleScrape/domain"
+	"github.com/Sovianum/hustleScrape/parsing"
 )
 
 var (
@@ -38,39 +39,39 @@ const (
 type parser struct {
 	techResultsState techResultsState
 
-	data BlockData
+	data Data
 }
 
-var _ parsers.Parser = (*parser)(nil)
+var _ parsing.Parser = (*parser)(nil)
 
 func NewParser() *parser {
 	return &parser{}
 }
 
-func (p *parser) Process(line string) (parsers.LineProcessingStatus, error) {
+func (p *parser) Process(line string) (parsing.LineProcessingStatus, error) {
 	if p.techResultsState == techResultsStateBodyFinished {
-		return parsers.LineProcessingStatusAnotherBlock, nil
+		return parsing.LineProcessingStatusAnotherBlock, nil
 	}
 
 	if techResultsBorder.MatchString(line) {
 		p.techResultsState = p.techResultsState.next()
 
-		return parsers.LineProcessingStatusOk, nil
+		return parsing.LineProcessingStatusOk, nil
 	}
 
 	switch p.techResultsState {
 	case techResultsStateHeaderStarted:
-		return parsers.LineProcessingStatusOk, nil
+		return parsing.LineProcessingStatusOk, nil
 	case techResultsStateNone:
-		return parsers.LineProcessingStatusAnotherBlock, nil
+		return parsing.LineProcessingStatusAnotherBlock, nil
 	case techResultsStateBodyStarted:
 		participantCrosses, err := p.parseJNJCrosses(line)
 		if err != nil {
-			return parsers.LineProcessingStatusNone, err
+			return parsing.LineProcessingStatusNone, err
 		}
 
 		p.data.Crosses = append(p.data.Crosses, participantCrosses)
-		return parsers.LineProcessingStatusOk, nil
+		return parsing.LineProcessingStatusOk, nil
 
 	default:
 		panic(fmt.Sprintf("unexpected state %d", p.techResultsState))
@@ -84,24 +85,24 @@ func (p *parser) parseJNJCrosses(line string) (ParticipantCrossesJNJ, error) {
 	crosses := crossesJNJ.FindStringSubmatch(parts[1])[0]
 	splitCrosses := strings.Split(crosses, "|")
 
-	firstDanceCrosses := make([]parsers.JudgeLabel, 0, len(splitCrosses[0]))
+	firstDanceCrosses := make([]domain.JudgeLabel, 0, len(splitCrosses[0]))
 	for _, c := range strings.TrimSpace(splitCrosses[0]) {
-		firstDanceCrosses = append(firstDanceCrosses, parsers.JudgeLabel(c))
+		firstDanceCrosses = append(firstDanceCrosses, domain.JudgeLabel(c))
 	}
 
-	secondDanceCrosses := make([]parsers.JudgeLabel, 0, len(splitCrosses[1]))
+	secondDanceCrosses := make([]domain.JudgeLabel, 0, len(splitCrosses[1]))
 	for _, c := range strings.TrimSpace(splitCrosses[1]) {
-		secondDanceCrosses = append(secondDanceCrosses, parsers.JudgeLabel(c))
+		secondDanceCrosses = append(secondDanceCrosses, domain.JudgeLabel(c))
 	}
 
 	return ParticipantCrossesJNJ{
-		ParticipantID:      parsers.ParticipantID(participantID),
+		ParticipantID:      domain.ParticipantID(participantID),
 		FirstDanceCrosses:  firstDanceCrosses,
 		SecondDanceCrosses: secondDanceCrosses,
 	}, nil
 }
 
-func (p *parser) GetData() parsers.DataBlock {
+func (p *parser) GetData() parsing.Data {
 	return p.data
 }
 

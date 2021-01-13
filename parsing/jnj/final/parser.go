@@ -6,7 +6,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/Sovianum/hustleScrape/parsers"
+	"github.com/Sovianum/hustleScrape/domain"
+	"github.com/Sovianum/hustleScrape/parsing"
 )
 
 var (
@@ -40,43 +41,43 @@ const (
 type parser struct {
 	finalTableState finalTableState
 
-	data BlockData
+	data Data
 }
 
-var _ parsers.Parser = (*parser)(nil)
+var _ parsing.Parser = (*parser)(nil)
 
 func NewParser() *parser {
 	return &parser{}
 }
 
-func (p *parser) Process(line string) (parsers.LineProcessingStatus, error) {
+func (p *parser) Process(line string) (parsing.LineProcessingStatus, error) {
 	if p.finalTableState == finalTableStateBodyFinished {
-		return parsers.LineProcessingStatusAnotherBlock, nil
+		return parsing.LineProcessingStatusAnotherBlock, nil
 	}
 
 	if tableBoundary.MatchString(line) {
 		p.finalTableState = p.finalTableState.next()
 
-		return parsers.LineProcessingStatusOk, nil
+		return parsing.LineProcessingStatusOk, nil
 	}
 
 	switch p.finalTableState {
 	case finalTableStateHeaderStarted:
-		return parsers.LineProcessingStatusOk, nil
+		return parsing.LineProcessingStatusOk, nil
 	case finalTableStateNone:
-		return parsers.LineProcessingStatusAnotherBlock, nil
+		return parsing.LineProcessingStatusAnotherBlock, nil
 	case finalTableStateBodyStarted:
 		participantPlaces, ok, err := p.parseFinalPlaces(line)
 		if err != nil {
-			return parsers.LineProcessingStatusNone, err
+			return parsing.LineProcessingStatusNone, err
 		}
 
 		if !ok {
-			return parsers.LineProcessingStatusOk, nil
+			return parsing.LineProcessingStatusOk, nil
 		}
 
 		p.data.Places = append(p.data.Places, participantPlaces)
-		return parsers.LineProcessingStatusOk, nil
+		return parsing.LineProcessingStatusOk, nil
 
 	default:
 		panic(fmt.Sprintf("unexpected state %d", p.finalTableState))
@@ -102,18 +103,18 @@ func (p *parser) parseFinalPlaces(line string) (ParticipantPlaces, bool, error) 
 	judgePlaces := make([]Place, 0, len(places))
 	for i, p := range places {
 		judgePlaces = append(judgePlaces, Place{
-			JudgeLabel: parsers.JudgeLabel(judgeLables[i]),
+			JudgeLabel: domain.JudgeLabel(judgeLables[i]),
 			Place:      p,
 		})
 	}
 
 	return ParticipantPlaces{
-		ParticipantID: parsers.CompetitionParticipantID(submatches[1]),
+		ParticipantID: domain.CompetitionParticipantID(submatches[1]),
 		Places:        judgePlaces,
 	}, true, nil
 }
 
-func (p *parser) GetData() parsers.DataBlock {
+func (p *parser) GetData() parsing.Data {
 	return p.data
 }
 

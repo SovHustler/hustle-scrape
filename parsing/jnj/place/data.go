@@ -1,18 +1,19 @@
 package place
 
 import (
-	"github.com/Sovianum/hustleScrape/parsers"
+	"github.com/Sovianum/hustleScrape/domain"
+	"github.com/Sovianum/hustleScrape/parsing"
 )
 
 type BlockData struct {
-	parsers.DataBlock
+	parsing.Data
 
 	Results []JNJResult
 }
 
 type JNJResult struct {
 	PlaceRange PlaceRange
-	ID         parsers.ParticipantID
+	ID         domain.ParticipantID
 }
 
 type PlaceRange struct {

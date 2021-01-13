@@ -3,23 +3,23 @@ package place
 import (
 	"testing"
 
-	"github.com/Sovianum/hustleScrape/parsers"
+	"github.com/Sovianum/hustleScrape/parsing"
 	"github.com/stretchr/testify/suite"
 )
 
 type ResultsTestSuite struct {
-	parsers.TestSuite
+	parsing.TestSuite
 }
 
 func TestResultsTestSuite(t *testing.T) {
 	suite.Run(t, &ResultsTestSuite{})
 }
 
-func (s *ResultsTestSuite) TestJNJ() {
+func (s *ResultsTestSuite) TestParser() {
 	p := NewParser()
 
-	s.CheckStatus(p, parsers.LineProcessingStatusOk, "1 место-№366-рябов михаил александрович(10465,ivara,d,bg)")
-	s.CheckStatus(p, parsers.LineProcessingStatusOk, "9-10 место-№244-федечкин сергей николаевич(11052,движение,d,bg)")
+	s.CheckStatus(p, parsing.LineProcessingStatusOk, "1 место-№366-рябов михаил александрович(10465,ivara,d,bg)")
+	s.CheckStatus(p, parsing.LineProcessingStatusOk, "9-10 место-№244-федечкин сергей николаевич(11052,движение,d,bg)")
 
 	data := p.GetData()
 	s.EqualValues(BlockData{

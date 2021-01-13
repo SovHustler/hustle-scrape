@@ -1,4 +1,4 @@
-package parsers
+package parsing
 
 import "fmt"
 
@@ -6,7 +6,7 @@ type Processor struct {
 	parsers       []Parser
 	currentParser Parser
 
-	dataBlocks []DataBlock
+	dataBlocks []Data
 }
 
 func NewProcessor(parsers []Parser) *Processor {
@@ -52,7 +52,7 @@ func (p *Processor) Process(line string) error {
 	}
 }
 
-func (p *Processor) GetData() []DataBlock {
+func (p *Processor) GetData() []Data {
 	return p.dataBlocks
 }
 

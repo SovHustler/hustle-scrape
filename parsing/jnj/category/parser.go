@@ -5,7 +5,8 @@ import (
 	"regexp"
 	"strconv"
 
-	"github.com/Sovianum/hustleScrape/parsers"
+	"github.com/Sovianum/hustleScrape/domain"
+	"github.com/Sovianum/hustleScrape/parsing"
 )
 
 var (
@@ -13,52 +14,52 @@ var (
 )
 
 type parser struct {
-	data BlockData
+	data Data
 }
 
-var _ parsers.Parser = (*parser)(nil)
+var _ parsing.Parser = (*parser)(nil)
 
 func NewParser() *parser {
 	return &parser{}
 }
 
-func (p *parser) Process(line string) (parsers.LineProcessingStatus, error) {
+func (p *parser) Process(line string) (parsing.LineProcessingStatus, error) {
 
 	if categoryLine.MatchString(line) {
 		return p.parseCategory(line)
 	}
 
-	return parsers.LineProcessingStatusAnotherBlock, nil
+	return parsing.LineProcessingStatusAnotherBlock, nil
 }
 
-func (p *parser) parseCategory(line string) (parsers.LineProcessingStatus, error) {
+func (p *parser) parseCategory(line string) (parsing.LineProcessingStatus, error) {
 	submatches := categoryLine.FindStringSubmatch(line)
 
-	var sex parsers.Sex
+	var sex domain.Sex
 	switch submatches[2] {
 	case "партнеры":
-		sex = parsers.SexMale
+		sex = domain.SexMale
 	case "девушки":
-		sex = parsers.SexFemale
+		sex = domain.SexFemale
 	default:
 		panic(fmt.Sprintf("unexpected sex %s", submatches[2]))
 	}
 
 	totalCompetitors, err := strconv.Atoi(submatches[3])
 	if err != nil {
-		return parsers.LineProcessingStatusNone, err
+		return parsing.LineProcessingStatusNone, err
 	}
 
-	p.data = BlockData{
+	p.data = Data{
 		Name:             submatches[1],
 		Sex:              sex,
 		TotalCompetitors: totalCompetitors,
 	}
 
-	return parsers.LineProcessingStatusOk, nil
+	return parsing.LineProcessingStatusOk, nil
 }
 
-func (p *parser) GetData() parsers.DataBlock {
+func (p *parser) GetData() parsing.Data {
 	return p.data
 }
 

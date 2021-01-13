@@ -1,4 +1,4 @@
-package parsers_test
+package parsing_test
 
 import (
 	"io/ioutil"
@@ -6,13 +6,13 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/Sovianum/hustleScrape/parsers"
-	"github.com/Sovianum/hustleScrape/parsers/jnj/category"
-	"github.com/Sovianum/hustleScrape/parsers/jnj/final"
-	"github.com/Sovianum/hustleScrape/parsers/jnj/phase"
-	"github.com/Sovianum/hustleScrape/parsers/jnj/place"
-	"github.com/Sovianum/hustleScrape/parsers/jnj/prefinal"
-	"github.com/Sovianum/hustleScrape/parsers/judges"
+	"github.com/Sovianum/hustleScrape/parsing"
+	"github.com/Sovianum/hustleScrape/parsing/jnj/category"
+	"github.com/Sovianum/hustleScrape/parsing/jnj/final"
+	"github.com/Sovianum/hustleScrape/parsing/jnj/phase"
+	"github.com/Sovianum/hustleScrape/parsing/jnj/place"
+	"github.com/Sovianum/hustleScrape/parsing/jnj/prefinal"
+	"github.com/Sovianum/hustleScrape/parsing/judges"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -39,7 +39,7 @@ func (s *ProcessorTestSuite) SetupSuite() {
 }
 
 func (s *ProcessorTestSuite) TestProcessWholePage() {
-	p := parsers.NewProcessor([]parsers.Parser{
+	p := parsing.NewProcessor([]parsing.Parser{
 		judges.NewParser(),
 		category.NewParser(),
 		final.NewParser(),

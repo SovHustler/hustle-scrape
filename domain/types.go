@@ -22,6 +22,11 @@ type ClassicLevel string
 
 type Sex string
 
+const (
+	SexMale   Sex = "male"
+	SexFemale Sex = "female"
+)
+
 type Category struct {
 	ID            CategoryID
 	CompetitionID CompetitionID
@@ -31,22 +36,24 @@ type Category struct {
 	Sex           Sex
 }
 
-type CompetitorID string
+type ParticipantID string
+
+type CompetitionParticipantID string
 
 type Competitor struct {
-	ID   CompetitorID
+	ID   ParticipantID
 	Name string
 }
 
 type ParticipantResult struct {
-	ParticipantID CompetitorID
+	ParticipantID ParticipantID
 	Place         int
 }
 
 type CompetitionPhase int
 
 type Cross struct {
-	CompetitorID  CompetitorID
+	CompetitorID  ParticipantID
 	CompetitionID CompetitionID
 	JudgeLabel    JudgeLabel
 	CategoryID    CategoryID

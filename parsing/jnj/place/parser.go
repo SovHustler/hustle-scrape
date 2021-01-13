@@ -5,7 +5,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/Sovianum/hustleScrape/parsers"
+	"github.com/Sovianum/hustleScrape/domain"
+	"github.com/Sovianum/hustleScrape/parsing"
 	"github.com/joomcode/errorx"
 )
 
@@ -17,37 +18,37 @@ type parser struct {
 	results []JNJResult
 }
 
-var _ parsers.Parser = (*parser)(nil)
+var _ parsing.Parser = (*parser)(nil)
 
 func NewParser() *parser {
 	return &parser{}
 }
 
-func (p *parser) Process(line string) (parsers.LineProcessingStatus, error) {
+func (p *parser) Process(line string) (parsing.LineProcessingStatus, error) {
 
 	switch {
 	case jnjCompetitorResultRegexp.MatchString(line):
 		return p.parseJNJCompetitor(line)
 
 	default:
-		return parsers.LineProcessingStatusAnotherBlock, nil
+		return parsing.LineProcessingStatusAnotherBlock, nil
 	}
 }
 
-func (p *parser) parseJNJCompetitor(line string) (parsers.LineProcessingStatus, error) {
+func (p *parser) parseJNJCompetitor(line string) (parsing.LineProcessingStatus, error) {
 	submatches := jnjCompetitorResultRegexp.FindStringSubmatch(line)
 
 	placeRange, err := p.parsePlaceRange(submatches[1])
 	if err != nil {
-		return parsers.LineProcessingStatusNone, errorx.IllegalArgument.Wrap(err, "failed to parse participant place \"%s\"", submatches[1])
+		return parsing.LineProcessingStatusNone, errorx.IllegalArgument.Wrap(err, "failed to parse participant place \"%s\"", submatches[1])
 	}
 
 	p.results = append(p.results, JNJResult{
 		PlaceRange: placeRange,
-		ID:         parsers.ParticipantID(submatches[4]),
+		ID:         domain.ParticipantID(submatches[4]),
 	})
 
-	return parsers.LineProcessingStatusOk, nil
+	return parsing.LineProcessingStatusOk, nil
 }
 
 func (p *parser) parsePlaceRange(placeRange string) (PlaceRange, error) {
@@ -81,7 +82,7 @@ func (p *parser) parsePlaceRange(placeRange string) (PlaceRange, error) {
 	}, err
 }
 
-func (p *parser) GetData() parsers.DataBlock {
+func (p *parser) GetData() parsing.Data {
 	return BlockData{
 		Results: p.results,
 	}

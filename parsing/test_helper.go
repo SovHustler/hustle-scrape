@@ -1,4 +1,4 @@
-package parsers
+package parsing
 
 import (
 	"github.com/stretchr/testify/suite"
