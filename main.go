@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 
+	"github.com/Sovianum/hustleScrape/blocksplit"
 	"github.com/Sovianum/hustleScrape/loading"
 	"github.com/Sovianum/hustleScrape/parsing"
 	"github.com/Sovianum/hustleScrape/parsing/jnj/category"
@@ -11,7 +12,6 @@ import (
 	"github.com/Sovianum/hustleScrape/parsing/jnj/place"
 	"github.com/Sovianum/hustleScrape/parsing/jnj/prefinal"
 	"github.com/Sovianum/hustleScrape/parsing/judges"
-	"github.com/Sovianum/hustleScrape/parsing/processor"
 )
 
 func main() {
@@ -20,7 +20,7 @@ func main() {
 		panic(err)
 	}
 
-	p := processor.NewProcessor([]parsing.Parser{
+	p := blocksplit.NewProcessor([]parsing.Parser{
 		judges.NewParser(),
 		category.NewParser(),
 		final.NewParser(),

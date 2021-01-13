@@ -1,4 +1,4 @@
-package processor_test
+package blocksplit_test
 
 import (
 	"io/ioutil"
@@ -6,6 +6,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/Sovianum/hustleScrape/blocksplit"
 	"github.com/Sovianum/hustleScrape/parsing"
 	"github.com/Sovianum/hustleScrape/parsing/jnj/category"
 	"github.com/Sovianum/hustleScrape/parsing/jnj/final"
@@ -13,7 +14,6 @@ import (
 	"github.com/Sovianum/hustleScrape/parsing/jnj/place"
 	"github.com/Sovianum/hustleScrape/parsing/jnj/prefinal"
 	"github.com/Sovianum/hustleScrape/parsing/judges"
-	"github.com/Sovianum/hustleScrape/parsing/processor"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -40,7 +40,7 @@ func (s *ProcessorTestSuite) SetupSuite() {
 }
 
 func (s *ProcessorTestSuite) TestProcessWholePage() {
-	p := processor.NewProcessor([]parsing.Parser{
+	p := blocksplit.NewProcessor([]parsing.Parser{
 		judges.NewParser(),
 		category.NewParser(),
 		final.NewParser(),
