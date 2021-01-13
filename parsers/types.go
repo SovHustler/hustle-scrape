@@ -24,3 +24,10 @@ type CompetitionParticipantID string
 type ClassicLevel string
 
 type JNJLevel string
+
+type Sex string
+
+const (
+	SexMale   Sex = "male"
+	SexFemale Sex = "female"
+)
