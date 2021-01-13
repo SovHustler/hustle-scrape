@@ -2,7 +2,12 @@ package parsers
 
 type Parser interface {
 	Process(line string) (LineProcessingStatus, error)
-	GetData() BlockData
+	GetData() DataBlock
+	Reset()
+}
+
+type DataBlock interface {
+	blockDataMarker()
 }
 
 type LineProcessingStatus int

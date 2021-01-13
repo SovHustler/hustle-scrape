@@ -19,11 +19,10 @@ func (s *ResultsTestSuite) TestJNJ() {
 	p := NewParser()
 
 	s.CheckStatus(p, parsers.LineProcessingStatusOk, "1 место-№366-рябов михаил александрович(10465,ivara,d,bg)")
-	s.CheckStatus(p, parsers.LineProcessingStatusOk, "1/2 финала")
 	s.CheckStatus(p, parsers.LineProcessingStatusOk, "9-10 место-№244-федечкин сергей николаевич(11052,движение,d,bg)")
 
 	data := p.GetData()
-	s.EqualValues(&BlockData{
+	s.EqualValues(BlockData{
 		Results: []JNJResult{
 			{
 				PlaceRange: PlaceRange{1, 1},
@@ -34,5 +33,5 @@ func (s *ResultsTestSuite) TestJNJ() {
 				ID:         "11052",
 			},
 		},
-	}, data.(*BlockData))
+	}, data.(BlockData))
 }

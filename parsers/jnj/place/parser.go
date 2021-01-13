@@ -10,13 +10,14 @@ import (
 )
 
 var (
-	jnjCompetitorResultRegexp = regexp.MustCompile(`^(?P<PlaceRange>(\d+|\d+-\d+))\sместо-№\d+-(?P<Name>.+)\((?P<ID>\d+),(?P<ClubName>.+),(?P<ClassicLevel>[a-z]+),(?P<JNJLevel>[a-z]+)\)$`)
-	preFinal                  = regexp.MustCompile(`^\s*1/\d\s+финала`)
+	jnjCompetitorResultRegexp = regexp.MustCompile(`^(?P<PlaceRange>(\d+|\d+-\d+))\sместо-№\d+-(?P<Name>.+)\((?P<ID>(\d+|дебют)),(?P<ClubName>.+),(?P<ClassicLevel>[a-z]+),(?P<JNJLevel>[a-z]+)\)$`)
 )
 
 type parser struct {
 	results []JNJResult
 }
+
+var _ parsers.Parser = (*parser)(nil)
 
 func NewParser() *parser {
 	return &parser{}
@@ -25,9 +26,6 @@ func NewParser() *parser {
 func (p *parser) Process(line string) (parsers.LineProcessingStatus, error) {
 
 	switch {
-	case line == "финал" || preFinal.MatchString(line):
-		return parsers.LineProcessingStatusOk, nil
-
 	case jnjCompetitorResultRegexp.MatchString(line):
 		return p.parseJNJCompetitor(line)
 
@@ -83,8 +81,13 @@ func (p *parser) parsePlaceRange(placeRange string) (PlaceRange, error) {
 	}, err
 }
 
-func (p *parser) GetData() parsers.BlockData {
-	return &BlockData{
+func (p *parser) GetData() parsers.DataBlock {
+	return BlockData{
 		Results: p.results,
 	}
+}
+
+func (p *parser) Reset() {
+	newParser := NewParser()
+	*p = *newParser
 }

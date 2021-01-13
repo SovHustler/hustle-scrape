@@ -37,17 +37,19 @@ const (
 	finalTableStateBodyFinished
 )
 
-type Parser struct {
+type parser struct {
 	finalTableState finalTableState
 
 	data BlockData
 }
 
-func NewParser() *Parser {
-	return &Parser{}
+var _ parsers.Parser = (*parser)(nil)
+
+func NewParser() *parser {
+	return &parser{}
 }
 
-func (p *Parser) Process(line string) (parsers.LineProcessingStatus, error) {
+func (p *parser) Process(line string) (parsers.LineProcessingStatus, error) {
 	if p.finalTableState == finalTableStateBodyFinished {
 		return parsers.LineProcessingStatusAnotherBlock, nil
 	}
@@ -81,7 +83,7 @@ func (p *Parser) Process(line string) (parsers.LineProcessingStatus, error) {
 	}
 }
 
-func (p *Parser) parseFinalPlaces(line string) (ParticipantPlaces, bool, error) {
+func (p *parser) parseFinalPlaces(line string) (ParticipantPlaces, bool, error) {
 	submatches := placesLine.FindStringSubmatch(line)
 	if len(submatches) < 2 {
 		return ParticipantPlaces{}, false, nil
@@ -111,6 +113,11 @@ func (p *Parser) parseFinalPlaces(line string) (ParticipantPlaces, bool, error) 
 	}, true, nil
 }
 
-func (p *Parser) GetData() parsers.BlockData {
-	return &p.data
+func (p *parser) GetData() parsers.DataBlock {
+	return p.data
+}
+
+func (p *parser) Reset() {
+	newParser := NewParser()
+	*p = *newParser
 }

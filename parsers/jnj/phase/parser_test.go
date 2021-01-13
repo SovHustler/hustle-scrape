@@ -19,12 +19,12 @@ func (s *ParserTestSuite) TestJNJ() {
 	p := NewParser()
 
 	s.CheckStatus(p, parsers.LineProcessingStatusOk, "финал")
-	s.EqualValues(&BlockData{
+	s.EqualValues(BlockData{
 		Phase: 1,
-	}, p.GetData().(*BlockData))
+	}, p.GetData().(BlockData))
 
 	s.CheckStatus(p, parsers.LineProcessingStatusOk, "1/2 финала")
-	s.EqualValues(&BlockData{
+	s.EqualValues(BlockData{
 		Phase: 2,
-	}, p.GetData().(*BlockData))
+	}, p.GetData().(BlockData))
 }

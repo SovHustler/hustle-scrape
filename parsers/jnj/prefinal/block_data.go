@@ -5,7 +5,7 @@ import (
 )
 
 type BlockData struct {
-	parsers.BlockData
+	parsers.DataBlock
 
 	Crosses []ParticipantCrossesJNJ
 }

@@ -4,26 +4,28 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/Sovianum/hustleScrape/parser"
+	"github.com/Sovianum/hustleScrape/parsers"
 )
 
 var judgeRegexp = regexp.MustCompile(`^\d+\s\((?P<JudgeLabel>.)\)\s-\s(?P<JudgeName>.*)`)
 
-type JudgeBlockParser struct {
+type parser struct {
 	mainJudgeHeaderFlag bool
 
-	data BlockData
+	data DataBlock
 }
 
-func NewJudgeBlockParser() *JudgeBlockParser {
-	return &JudgeBlockParser{
-		data: BlockData{
+var _ parsers.Parser = (*parser)(nil)
+
+func NewParser() *parser {
+	return &parser{
+		data: DataBlock{
 			Judges: make(map[parsers.JudgeLabel]string),
 		},
 	}
 }
 
-func (p *JudgeBlockParser) Process(line string) (parsers.LineProcessingStatus, error) {
+func (p *parser) Process(line string) (parsers.LineProcessingStatus, error) {
 	switch {
 	case strings.HasPrefix(line, "главный судья"):
 		p.mainJudgeHeaderFlag = true
@@ -48,6 +50,11 @@ func (p *JudgeBlockParser) Process(line string) (parsers.LineProcessingStatus, e
 	}
 }
 
-func (p *JudgeBlockParser) GetData() parsers.BlockData {
-	return &p.data
+func (p *parser) GetData() parsers.DataBlock {
+	return p.data
+}
+
+func (p *parser) Reset() {
+	newParser := NewParser()
+	*p = *newParser
 }

@@ -15,6 +15,8 @@ type parser struct {
 	data BlockData
 }
 
+var _ parsers.Parser = (*parser)(nil)
+
 func NewParser() *parser {
 	return &parser{}
 }
@@ -46,6 +48,11 @@ func (p *parser) parsePreFinal(line string) (parsers.LineProcessingStatus, error
 	return parsers.LineProcessingStatusOk, nil
 }
 
-func (p *parser) GetData() parsers.BlockData {
-	return &p.data
+func (p *parser) GetData() parsers.DataBlock {
+	return p.data
+}
+
+func (p *parser) Reset() {
+	newParser := NewParser()
+	*p = *newParser
 }
