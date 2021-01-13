@@ -2,54 +2,40 @@ package main
 
 import (
 	"fmt"
-	"log"
-	"net/http"
 
-	"github.com/PuerkitoBio/goquery"
-	"github.com/djimenez/iconv-go"
+	"github.com/Sovianum/hustleScrape/loading"
+	"github.com/Sovianum/hustleScrape/parsing"
+	"github.com/Sovianum/hustleScrape/parsing/jnj/category"
+	"github.com/Sovianum/hustleScrape/parsing/jnj/final"
+	"github.com/Sovianum/hustleScrape/parsing/jnj/phase"
+	"github.com/Sovianum/hustleScrape/parsing/jnj/place"
+	"github.com/Sovianum/hustleScrape/parsing/jnj/prefinal"
+	"github.com/Sovianum/hustleScrape/parsing/judges"
+	"github.com/Sovianum/hustleScrape/parsing/processor"
 )
 
 func main() {
-	// Request the HTML page.
-	res, err := http.Get("http://hustle-sa.ru/forum/index.php?showtopic=4909")
+	lines, err := loading.LoadPageRaw("http://hustle-sa.ru/forum/index.php?showtopic=4909")
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 
-	defer res.Body.Close()
-	if res.StatusCode != 200 {
-		log.Fatalf("status code error: %d %s", res.StatusCode, res.Status)
-	}
-
-	// Convert the designated charset HTML to utf-8 encoded HTML.
-	// `charset` being one of the charsets known by the iconv package.
-	utfBody, err := iconv.NewReader(res.Body, "WINDOWS-1251", "utf-8")
-	if err != nil {
-		// handler error
-	}
-
-	// Load the HTML document
-	doc, err := goquery.NewDocumentFromReader(utfBody)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	doc.Find("")
-
-	// Find the review items
-	doc.Find(".sidebar-reviews article .content-block").Each(func(i int, s *goquery.Selection) {
-		// For each item found, get the band and title
-		band := s.Find("a").Text()
-		title := s.Find("i").Text()
-		fmt.Printf("Review %d: %s - %s\n", i, band, title)
+	p := processor.NewProcessor([]parsing.Parser{
+		judges.NewParser(),
+		category.NewParser(),
+		final.NewParser(),
+		phase.NewParser(),
+		place.NewParser(),
+		prefinal.NewParser(),
 	})
 
-	//b, err := ioutil.ReadAll(utfBody)
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
-	//
-	//log.Print(string(b))
+	for _, line := range lines {
+		err = p.Process(line)
+		if err != nil {
+			panic(err)
+		}
+	}
+
+	data := p.GetData()
+	fmt.Println(data)
 }
-
-

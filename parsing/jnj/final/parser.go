@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	tableBoundary = regexp.MustCompile(`-+\+-+\+-+`)
+	tableBoundary = regexp.MustCompile(`^-+\+-+\+-+$`)
 	placesLine    = regexp.MustCompile(`^\s*(?P<PartnerCompetitionNumber>\d+)\s+\|\s+(?P<Places>(\d\s)+)\s*\|\s+(?P<TotalPlace>\d)`)
 	judgeLables   = "abcdefgji"
 )

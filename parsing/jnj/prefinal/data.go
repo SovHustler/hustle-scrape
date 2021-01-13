@@ -8,10 +8,10 @@ import (
 type Data struct {
 	parsing.Data
 
-	Crosses []ParticipantCrossesJNJ
+	Crosses []ParticipantCrosses
 }
 
-type ParticipantCrossesJNJ struct {
+type ParticipantCrosses struct {
 	ParticipantID domain.ParticipantID
 
 	FirstDanceCrosses  []domain.JudgeLabel

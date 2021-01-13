@@ -8,10 +8,10 @@ import (
 type BlockData struct {
 	parsing.Data
 
-	Results []JNJResult
+	Results []Result
 }
 
-type JNJResult struct {
+type Result struct {
 	PlaceRange PlaceRange
 	ID         domain.ParticipantID
 }

@@ -23,7 +23,7 @@ func (s *ResultsTestSuite) TestParser() {
 
 	data := p.GetData()
 	s.EqualValues(BlockData{
-		Results: []JNJResult{
+		Results: []Result{
 			{
 				PlaceRange: PlaceRange{1, 1},
 				ID:         "10465",

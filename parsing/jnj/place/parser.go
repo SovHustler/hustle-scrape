@@ -15,7 +15,7 @@ var (
 )
 
 type parser struct {
-	results []JNJResult
+	results []Result
 }
 
 var _ parsing.Parser = (*parser)(nil)
@@ -43,7 +43,7 @@ func (p *parser) parseJNJCompetitor(line string) (parsing.LineProcessingStatus, 
 		return parsing.LineProcessingStatusNone, errorx.IllegalArgument.Wrap(err, "failed to parse participant place \"%s\"", submatches[1])
 	}
 
-	p.results = append(p.results, JNJResult{
+	p.results = append(p.results, Result{
 		PlaceRange: placeRange,
 		ID:         domain.ParticipantID(submatches[4]),
 	})

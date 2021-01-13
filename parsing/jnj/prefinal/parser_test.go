@@ -28,7 +28,7 @@ func (s *TechTestSuite) TestParser() {
 
 	data := p.GetData()
 	s.EqualValues(Data{
-		Crosses: []ParticipantCrossesJNJ{
+		Crosses: []ParticipantCrosses{
 			{
 				ParticipantID:      "109",
 				FirstDanceCrosses:  []domain.JudgeLabel{"a", "b"},

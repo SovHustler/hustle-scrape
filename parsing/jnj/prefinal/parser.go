@@ -10,8 +10,8 @@ import (
 )
 
 var (
-	techResultsBorder = regexp.MustCompile(`-+\+-+`)
-	crossesJNJ        = regexp.MustCompile(`[abcdefghij]*\s*\|[abcdefghij]*`)
+	techResultsBorder = regexp.MustCompile(`^-+\+-+$`)
+	crosses           = regexp.MustCompile(`[abcdefghij]*\s*\|[abcdefghij]*`)
 )
 
 type techResultsState int
@@ -65,7 +65,7 @@ func (p *parser) Process(line string) (parsing.LineProcessingStatus, error) {
 	case techResultsStateNone:
 		return parsing.LineProcessingStatusAnotherBlock, nil
 	case techResultsStateBodyStarted:
-		participantCrosses, err := p.parseJNJCrosses(line)
+		participantCrosses, err := p.parseCrosses(line)
 		if err != nil {
 			return parsing.LineProcessingStatusNone, err
 		}
@@ -78,11 +78,11 @@ func (p *parser) Process(line string) (parsing.LineProcessingStatus, error) {
 	}
 }
 
-func (p *parser) parseJNJCrosses(line string) (ParticipantCrossesJNJ, error) {
-	parts := strings.SplitN(line, " | ", 2)
+func (p *parser) parseCrosses(line string) (ParticipantCrosses, error) {
+	parts := strings.SplitN(line, "|", 2)
 	participantID := strings.TrimSpace(parts[0])
 
-	crosses := crossesJNJ.FindStringSubmatch(parts[1])[0]
+	crosses := crosses.FindStringSubmatch(parts[1])[0]
 	splitCrosses := strings.Split(crosses, "|")
 
 	firstDanceCrosses := make([]domain.JudgeLabel, 0, len(splitCrosses[0]))
@@ -95,7 +95,7 @@ func (p *parser) parseJNJCrosses(line string) (ParticipantCrossesJNJ, error) {
 		secondDanceCrosses = append(secondDanceCrosses, domain.JudgeLabel(c))
 	}
 
-	return ParticipantCrossesJNJ{
+	return ParticipantCrosses{
 		ParticipantID:      domain.ParticipantID(participantID),
 		FirstDanceCrosses:  firstDanceCrosses,
 		SecondDanceCrosses: secondDanceCrosses,
