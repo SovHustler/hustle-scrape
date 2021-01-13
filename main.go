@@ -12,6 +12,7 @@ import (
 	"github.com/Sovianum/hustleScrape/parsing/jnj/place"
 	"github.com/Sovianum/hustleScrape/parsing/jnj/prefinal"
 	"github.com/Sovianum/hustleScrape/parsing/judges"
+	"github.com/Sovianum/hustleScrape/structuring"
 )
 
 func main() {
@@ -36,6 +37,16 @@ func main() {
 		}
 	}
 
-	data := p.GetData()
-	fmt.Println(data)
+	dataParts := p.GetData()
+
+	converter := structuring.NewConverter()
+
+	var structuredData []structuring.Data
+	for _, part := range dataParts {
+		structuredData = append(structuredData, converter.Convert(part)...)
+	}
+
+	tables := structuring.GroupToTables(structuredData)
+
+	fmt.Println(tables)
 }

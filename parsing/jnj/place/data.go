@@ -5,15 +5,16 @@ import (
 	"github.com/Sovianum/hustleScrape/parsing"
 )
 
-type BlockData struct {
+type Data struct {
 	parsing.Data
 
 	Results []Result
 }
 
 type Result struct {
-	PlaceRange PlaceRange
-	ID         domain.ParticipantID
+	PlaceRange               PlaceRange
+	ParticipantID            domain.ParticipantID
+	CompetitionParticipantID domain.CompetitionParticipantID
 }
 
 type PlaceRange struct {

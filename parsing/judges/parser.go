@@ -13,17 +13,13 @@ var judgeRegexp = regexp.MustCompile(`^\d+\s\((?P<JudgeLabel>.)\)\s-\s(?P<JudgeN
 type parser struct {
 	mainJudgeHeaderFlag bool
 
-	data DataBlock
+	data Data
 }
 
 var _ parsing.Parser = (*parser)(nil)
 
 func NewParser() *parser {
-	return &parser{
-		data: DataBlock{
-			Judges: make(map[domain.JudgeLabel]string),
-		},
-	}
+	return &parser{}
 }
 
 func (p *parser) Process(line string) (parsing.LineProcessingStatus, error) {
@@ -46,7 +42,11 @@ func (p *parser) Process(line string) (parsing.LineProcessingStatus, error) {
 			return parsing.LineProcessingStatusAnotherBlock, nil
 		}
 
-		p.data.Judges[domain.JudgeLabel(submatches[1])] = submatches[2]
+		p.data.Judges = append(p.data.Judges, Judge{
+			Label: domain.JudgeLabel(submatches[1]),
+			Name:  submatches[2],
+		})
+
 		return parsing.LineProcessingStatusOk, nil
 	}
 }

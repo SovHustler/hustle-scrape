@@ -35,11 +35,11 @@ func (s *ParserTestSuite) TestParser() {
 	s.CheckStatus(p, parsing.LineProcessingStatusOk, "2 (в) - николаева екатерина")
 
 	data := p.GetData()
-	s.EqualValues(DataBlock{
+	s.EqualValues(Data{
 		MainJudge: "катунин павел",
 		Judges: map[domain.JudgeLabel]string{
 			"a": "катунин павел",
 			"в": "николаева екатерина",
 		},
-	}, data.(DataBlock))
+	}, data.(Data))
 }

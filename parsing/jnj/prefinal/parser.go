@@ -96,9 +96,9 @@ func (p *parser) parseCrosses(line string) (ParticipantCrosses, error) {
 	}
 
 	return ParticipantCrosses{
-		ParticipantID:      domain.ParticipantID(participantID),
-		FirstDanceCrosses:  firstDanceCrosses,
-		SecondDanceCrosses: secondDanceCrosses,
+		CompetitionParticipantID: domain.CompetitionParticipantID(participantID),
+		FirstDanceCrosses:        firstDanceCrosses,
+		SecondDanceCrosses:       secondDanceCrosses,
 	}, nil
 }
 

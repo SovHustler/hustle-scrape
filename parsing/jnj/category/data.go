@@ -8,7 +8,7 @@ import (
 type Data struct {
 	parsing.Data
 
-	Name             string
+	ID               domain.CategoryID
 	Sex              domain.Sex
 	TotalCompetitors int
 }

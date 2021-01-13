@@ -12,7 +12,7 @@ type Data struct {
 }
 
 type ParticipantCrosses struct {
-	ParticipantID domain.ParticipantID
+	CompetitionParticipantID domain.CompetitionParticipantID
 
 	FirstDanceCrosses  []domain.JudgeLabel
 	SecondDanceCrosses []domain.JudgeLabel

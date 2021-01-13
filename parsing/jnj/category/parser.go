@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	categoryLine = regexp.MustCompile(`^\s*(?P<Name>.+)\s+\((?P<Sex>партнеры|девушки)\)\.\s+участников:\s+(?P<Total>\d+)`)
+	categoryLine = regexp.MustCompile(`^\s*(?P<ID>.+)\s+\((?P<Sex>партнеры|девушки)\)\.\s+участников:\s+(?P<Total>\d+)`)
 )
 
 type parser struct {
@@ -51,7 +51,7 @@ func (p *parser) parseCategory(line string) (parsing.LineProcessingStatus, error
 	}
 
 	p.data = Data{
-		Name:             submatches[1],
+		ID:               domain.CategoryID(submatches[1]),
 		Sex:              sex,
 		TotalCompetitors: totalCompetitors,
 	}
