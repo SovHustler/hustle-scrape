@@ -19,7 +19,7 @@ func TestParserTestSuite(t *testing.T) {
 func (s *ParserTestSuite) TestParser() {
 	p := NewParser()
 
-	s.CheckStatus(p, parsing.LineProcessingStatusOk, "dnd beginner (нерейтинг) (партнеры). участников: 17")
+	s.CheckStatus(p, parsing.LineProcessingStatusOk, "dnd beginner (нерейтинг) (партнеры). участников: 17")
 
 	data := p.GetData()
 	s.EqualValues(Data{
