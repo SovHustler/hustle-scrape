@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	participantResultRegexp = regexp.MustCompile(`^(?P<PlaceRange>(\d+|\d+-\d+))\sместо-№(?P<CompetitionID>\d+)-(?P<Name>.+)\((?P<ID>(\d+|дебют)),(?P<ClubName>.+),(?P<ClassicLevel>[a-z]+),(?P<JNJLevel>[a-z]+)\)$`)
+	participantResultRegexp = regexp.MustCompile(`^(?P<PlaceRange>(\d+|\d+-\d+))\sместо-№(?P<CompetitionID>\d+)-(?P<Name>[^()-,]+)\((?P<ID>(\d+|дебют)),(?P<ClubName>[^-]+),(?P<ClassicLevel>[a-z]+),(?P<JNJLevel>[a-z]+)\)$`)
 )
 
 type parser struct {

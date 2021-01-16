@@ -37,3 +37,9 @@ func (s *ResultsTestSuite) TestParser() {
 		},
 	}, data.(Data))
 }
+
+func (s *ResultsTestSuite) TestClassicNotParsed() {
+	p := NewParser()
+
+	s.CheckStatus(p, parsing.LineProcessingStatusAnotherBlock, "1 место-№64-корзинин кирилл константинович(дебют,ivara,e)-даниеле даугелайте(дебют,ivara,e)")
+}

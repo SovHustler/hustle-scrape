@@ -15,7 +15,19 @@ func LoadPageRaw(url string) ([]string, error) {
 
 	doc := soup.HTMLParse(resp)
 
-	return getPageRaw(doc), nil
+	pageRaw := getPageRaw(doc)
+
+	return removePrefix(pageRaw), nil
+}
+
+func removePrefix(lines []string) []string {
+	for i, line := range lines {
+		if line == "результаты турнира:" {
+			return lines[i:]
+		}
+	}
+
+	return nil
 }
 
 func getPageRaw(node soup.Root) []string {
