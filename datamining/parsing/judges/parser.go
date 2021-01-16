@@ -2,6 +2,7 @@ package judges
 
 import (
 	"regexp"
+	"sort"
 	"strings"
 
 	"github.com/Sovianum/hustleScrape/datamining/domain"
@@ -52,9 +53,14 @@ func (p *parser) Process(line string) (parsing.LineProcessingStatus, error) {
 			label = "c"
 		}
 
+		rawJudgeName := submatches[2]
+		judgeNameParts := strings.Split(rawJudgeName, " ")
+		sort.Strings(judgeNameParts)
+		judgeName := strings.Join(judgeNameParts, " ")
+
 		p.data.Judges = append(p.data.Judges, Judge{
 			Label: label,
-			Name:  domain.JudgeName(submatches[2]),
+			Name:  domain.JudgeName(judgeName),
 		})
 
 		return parsing.LineProcessingStatusOk, nil
