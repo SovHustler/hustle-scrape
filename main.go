@@ -44,7 +44,7 @@ func main() {
 
 	tables := structuring.GroupToTables(result)
 
-	if err := tables.Write("/tmp/hustle"); err != nil {
+	if err := tables.Write("dataset"); err != nil {
 		panic(err)
 	}
 }
