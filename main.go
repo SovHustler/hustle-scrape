@@ -1,18 +1,18 @@
 package main
 
 import (
-	"github.com/Sovianum/hustleScrape/blocksplit"
-	"github.com/Sovianum/hustleScrape/domain"
-	"github.com/Sovianum/hustleScrape/loading/competition"
-	"github.com/Sovianum/hustleScrape/loading/competitions"
-	"github.com/Sovianum/hustleScrape/parsing"
-	"github.com/Sovianum/hustleScrape/parsing/category"
-	"github.com/Sovianum/hustleScrape/parsing/jnj/final"
-	"github.com/Sovianum/hustleScrape/parsing/jnj/phase"
-	"github.com/Sovianum/hustleScrape/parsing/jnj/place"
-	"github.com/Sovianum/hustleScrape/parsing/judges"
-	"github.com/Sovianum/hustleScrape/parsing/prefinal"
-	"github.com/Sovianum/hustleScrape/structuring"
+	"github.com/Sovianum/hustleScrape/datamining/blocksplit"
+	"github.com/Sovianum/hustleScrape/datamining/domain"
+	"github.com/Sovianum/hustleScrape/datamining/loading/competition"
+	"github.com/Sovianum/hustleScrape/datamining/loading/competitions"
+	"github.com/Sovianum/hustleScrape/datamining/parsing"
+	"github.com/Sovianum/hustleScrape/datamining/parsing/category"
+	"github.com/Sovianum/hustleScrape/datamining/parsing/jnj/final"
+	"github.com/Sovianum/hustleScrape/datamining/parsing/jnj/phase"
+	"github.com/Sovianum/hustleScrape/datamining/parsing/jnj/place"
+	"github.com/Sovianum/hustleScrape/datamining/parsing/judges"
+	"github.com/Sovianum/hustleScrape/datamining/parsing/prefinal"
+	"github.com/Sovianum/hustleScrape/datamining/structuring"
 )
 
 func main() {
