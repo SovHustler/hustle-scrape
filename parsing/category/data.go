@@ -8,7 +8,17 @@ import (
 type Data struct {
 	parsing.Data
 
-	Name             string
+	JNJ     *JNJData
+	Classic *ClassicData
+}
+
+type JNJData struct {
+	ID               domain.CategoryID
 	Sex              domain.Sex
+	TotalCompetitors int
+}
+
+type ClassicData struct {
+	ID               domain.CategoryID
 	TotalCompetitors int
 }

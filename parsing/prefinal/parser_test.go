@@ -30,14 +30,12 @@ func (s *TechTestSuite) TestParser() {
 	s.EqualValues(Data{
 		Crosses: []ParticipantCrosses{
 			{
-				ParticipantID:      "109",
-				FirstDanceCrosses:  []domain.JudgeLabel{"a", "b"},
-				SecondDanceCrosses: []domain.JudgeLabel{"c", "d", "e"},
+				CompetitionParticipantID: "109",
+				Crosses:                  []domain.JudgeLabel{"a", "b", "c", "d", "e"},
 			},
 			{
-				ParticipantID:      "79",
-				FirstDanceCrosses:  []domain.JudgeLabel{},
-				SecondDanceCrosses: []domain.JudgeLabel{},
+				CompetitionParticipantID: "79",
+				Crosses:                  []domain.JudgeLabel{},
 			},
 		},
 	}, data.(Data))

@@ -82,23 +82,16 @@ func (p *parser) parseCrosses(line string) (ParticipantCrosses, error) {
 	parts := strings.SplitN(line, "|", 2)
 	participantID := strings.TrimSpace(parts[0])
 
-	crosses := crosses.FindStringSubmatch(parts[1])[0]
-	splitCrosses := strings.Split(crosses, "|")
+	crossesStr := strings.ReplaceAll(crosses.FindStringSubmatch(parts[1])[0], "|", "")
 
-	firstDanceCrosses := make([]domain.JudgeLabel, 0, len(splitCrosses[0]))
-	for _, c := range strings.TrimSpace(splitCrosses[0]) {
-		firstDanceCrosses = append(firstDanceCrosses, domain.JudgeLabel(c))
-	}
-
-	secondDanceCrosses := make([]domain.JudgeLabel, 0, len(splitCrosses[1]))
-	for _, c := range strings.TrimSpace(splitCrosses[1]) {
-		secondDanceCrosses = append(secondDanceCrosses, domain.JudgeLabel(c))
+	crosses := make([]domain.JudgeLabel, 0, len(crossesStr))
+	for _, c := range strings.TrimSpace(crossesStr) {
+		crosses = append(crosses, domain.JudgeLabel(c))
 	}
 
 	return ParticipantCrosses{
-		ParticipantID:      domain.ParticipantID(participantID),
-		FirstDanceCrosses:  firstDanceCrosses,
-		SecondDanceCrosses: secondDanceCrosses,
+		CompetitionParticipantID: domain.CompetitionParticipantID(participantID),
+		Crosses:                  crosses,
 	}, nil
 }
 

@@ -5,9 +5,14 @@ import (
 	"github.com/Sovianum/hustleScrape/parsing"
 )
 
-type DataBlock struct {
+type Data struct {
 	parsing.Data
 
 	MainJudge string
-	Judges    map[domain.JudgeLabel]string
+	Judges    []Judge
+}
+
+type Judge struct {
+	Label domain.JudgeLabel
+	Name  domain.JudgeName
 }

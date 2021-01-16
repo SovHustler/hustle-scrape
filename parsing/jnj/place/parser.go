@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	jnjCompetitorResultRegexp = regexp.MustCompile(`^(?P<PlaceRange>(\d+|\d+-\d+))\sместо-№\d+-(?P<Name>.+)\((?P<ID>(\d+|дебют)),(?P<ClubName>.+),(?P<ClassicLevel>[a-z]+),(?P<JNJLevel>[a-z]+)\)$`)
+	participantResultRegexp = regexp.MustCompile(`^(?P<PlaceRange>(\d+|\d+-\d+))\sместо-№(?P<CompetitionID>\d+)-(?P<Name>[^()-,]+)\((?P<ID>(\d+|дебют)),(?P<ClubName>[^-]+),(?P<ClassicLevel>[a-z]+),(?P<JNJLevel>[a-z]+)\)$`)
 )
 
 type parser struct {
@@ -27,25 +27,33 @@ func NewParser() *parser {
 func (p *parser) Process(line string) (parsing.LineProcessingStatus, error) {
 
 	switch {
-	case jnjCompetitorResultRegexp.MatchString(line):
-		return p.parseJNJCompetitor(line)
+	case participantResultRegexp.MatchString(line):
+		return p.parseParticipant(line)
 
 	default:
 		return parsing.LineProcessingStatusAnotherBlock, nil
 	}
 }
 
-func (p *parser) parseJNJCompetitor(line string) (parsing.LineProcessingStatus, error) {
-	submatches := jnjCompetitorResultRegexp.FindStringSubmatch(line)
+func (p *parser) parseParticipant(line string) (parsing.LineProcessingStatus, error) {
+	submatches := participantResultRegexp.FindStringSubmatch(line)
 
 	placeRange, err := p.parsePlaceRange(submatches[1])
 	if err != nil {
 		return parsing.LineProcessingStatusNone, errorx.IllegalArgument.Wrap(err, "failed to parse participant place \"%s\"", submatches[1])
 	}
 
+	competitionID := domain.CompetitionParticipantID(submatches[3])
+	id := domain.ParticipantID(submatches[5])
+
+	if id == "дебют" {
+		competitionID = ""
+	}
+
 	p.results = append(p.results, Result{
-		PlaceRange: placeRange,
-		ID:         domain.ParticipantID(submatches[4]),
+		PlaceRange:               placeRange,
+		ParticipantID:            id,
+		CompetitionParticipantID: competitionID,
 	})
 
 	return parsing.LineProcessingStatusOk, nil
@@ -83,7 +91,7 @@ func (p *parser) parsePlaceRange(placeRange string) (PlaceRange, error) {
 }
 
 func (p *parser) GetData() parsing.Data {
-	return BlockData{
+	return Data{
 		Results: p.results,
 	}
 }

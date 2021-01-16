@@ -23,8 +23,10 @@ func (s *ParserTestSuite) TestParser() {
 
 	data := p.GetData()
 	s.EqualValues(Data{
-		Name:             "dnd beginner (нерейтинг)",
-		Sex:              domain.SexMale,
-		TotalCompetitors: 17,
+		JNJ: &JNJData{
+			ID:               "dnd beginner (нерейтинг)",
+			Sex:              domain.SexMale,
+			TotalCompetitors: 17,
+		},
 	}, data.(Data))
 }

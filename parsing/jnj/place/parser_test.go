@@ -22,16 +22,24 @@ func (s *ResultsTestSuite) TestParser() {
 	s.CheckStatus(p, parsing.LineProcessingStatusOk, "9-10 место-№244-федечкин сергей николаевич(11052,движение,d,bg)")
 
 	data := p.GetData()
-	s.EqualValues(BlockData{
+	s.EqualValues(Data{
 		Results: []Result{
 			{
-				PlaceRange: PlaceRange{1, 1},
-				ID:         "10465",
+				PlaceRange:               PlaceRange{1, 1},
+				ParticipantID:            "10465",
+				CompetitionParticipantID: "366",
 			},
 			{
-				PlaceRange: PlaceRange{9, 10},
-				ID:         "11052",
+				PlaceRange:               PlaceRange{9, 10},
+				ParticipantID:            "11052",
+				CompetitionParticipantID: "244",
 			},
 		},
-	}, data.(BlockData))
+	}, data.(Data))
+}
+
+func (s *ResultsTestSuite) TestClassicNotParsed() {
+	p := NewParser()
+
+	s.CheckStatus(p, parsing.LineProcessingStatusAnotherBlock, "1 место-№64-корзинин кирилл константинович(дебют,ivara,e)-даниеле даугелайте(дебют,ivara,e)")
 }

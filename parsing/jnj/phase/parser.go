@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	preFinal = regexp.MustCompile(`^\s*1/(?P<Phase>\d+)\sфинала`)
+	preFinal = regexp.MustCompile(`\s*1/(?P<Phase>\d+)\sфинала$`)
 )
 
 type parser struct {

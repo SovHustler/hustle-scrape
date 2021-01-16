@@ -1,21 +1,20 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/Sovianum/hustleScrape/blocksplit"
 	"github.com/Sovianum/hustleScrape/loading"
 	"github.com/Sovianum/hustleScrape/parsing"
-	"github.com/Sovianum/hustleScrape/parsing/jnj/category"
+	"github.com/Sovianum/hustleScrape/parsing/category"
 	"github.com/Sovianum/hustleScrape/parsing/jnj/final"
 	"github.com/Sovianum/hustleScrape/parsing/jnj/phase"
 	"github.com/Sovianum/hustleScrape/parsing/jnj/place"
-	"github.com/Sovianum/hustleScrape/parsing/jnj/prefinal"
 	"github.com/Sovianum/hustleScrape/parsing/judges"
+	"github.com/Sovianum/hustleScrape/parsing/prefinal"
+	"github.com/Sovianum/hustleScrape/structuring"
 )
 
 func main() {
-	lines, err := loading.LoadPageRaw("http://hustle-sa.ru/forum/index.php?showtopic=4909")
+	lines, err := loading.LoadPageRaw("http://hustle-sa.ru/forum/index.php?showtopic=4997")
 	if err != nil {
 		panic(err)
 	}
@@ -36,6 +35,18 @@ func main() {
 		}
 	}
 
-	data := p.GetData()
-	fmt.Println(data)
+	dataParts := p.GetData()
+
+	converter := structuring.NewConverter()
+
+	var structuredData []structuring.Data
+	for _, part := range dataParts {
+		structuredData = append(structuredData, converter.Convert(part)...)
+	}
+
+	tables := structuring.GroupToTables(structuredData)
+
+	if err := tables.Write("/tmp/hustle"); err != nil {
+		panic(err)
+	}
 }
