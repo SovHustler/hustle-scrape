@@ -2,7 +2,9 @@ package main
 
 import (
 	"github.com/Sovianum/hustleScrape/blocksplit"
-	"github.com/Sovianum/hustleScrape/loading"
+	"github.com/Sovianum/hustleScrape/domain"
+	"github.com/Sovianum/hustleScrape/loading/competition"
+	"github.com/Sovianum/hustleScrape/loading/competitions"
 	"github.com/Sovianum/hustleScrape/parsing"
 	"github.com/Sovianum/hustleScrape/parsing/category"
 	"github.com/Sovianum/hustleScrape/parsing/jnj/final"
@@ -14,9 +16,47 @@ import (
 )
 
 func main() {
-	lines, err := loading.LoadPageRaw("http://hustle-sa.ru/forum/index.php?showtopic=4997")
+	pageStart := competitions.FirstNewFormatEvent
+
+	var result []structuring.Data
+
+	for {
+		cs, err := competitions.GetCompetitions(pageStart)
+		if err != nil {
+			panic(err)
+		}
+
+		if len(cs) == 0 {
+			break
+		}
+
+		for _, c := range cs {
+			dataParts, err := parseCompetition(c)
+			if err != nil {
+				panic(err)
+			}
+
+			result = append(result, dataParts...)
+		}
+
+		pageStart += competitions.EventPageSize
+	}
+
+	tables := structuring.GroupToTables(result)
+
+	if err := tables.Write("/tmp/hustle"); err != nil {
+		panic(err)
+	}
+}
+
+func parseCompetition(c competitions.Competition) ([]structuring.Data, error) {
+	lines, err := competition.LoadPageRaw(c.URL)
 	if err != nil {
 		panic(err)
+	}
+
+	if len(lines) == 0 {
+		return nil, nil
 	}
 
 	p := blocksplit.NewProcessor([]parsing.Parser{
@@ -37,16 +77,12 @@ func main() {
 
 	dataParts := p.GetData()
 
-	converter := structuring.NewConverter()
+	converter := structuring.NewConverter(domain.CompetitionID(c.Name + "_" + c.StartDate.Format("2006-01-02")))
 
 	var structuredData []structuring.Data
 	for _, part := range dataParts {
 		structuredData = append(structuredData, converter.Convert(part)...)
 	}
 
-	tables := structuring.GroupToTables(structuredData)
-
-	if err := tables.Write("/tmp/hustle"); err != nil {
-		panic(err)
-	}
+	return structuredData, nil
 }

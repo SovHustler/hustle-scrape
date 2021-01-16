@@ -79,12 +79,18 @@ type Cross struct {
 }
 
 func (c Cross) ToStrings() []string {
+	passedStr := "0"
+	if c.Passed {
+		passedStr = "1"
+	}
+
 	return []string{
 		string(c.ParticipantID),
 		string(c.CompetitionID),
 		string(c.JudgeName),
 		string(c.CategoryID),
 		strconv.Itoa(int(c.Phase)),
+		passedStr,
 	}
 }
 

@@ -14,7 +14,7 @@ import (
 )
 
 type Converter struct {
-	competitionID domain.CompetitionID // TODO fill in
+	competitionID domain.CompetitionID
 
 	participantMatching  map[domain.CompetitionParticipantID]domain.ParticipantID
 	currentJudgesMapping map[domain.JudgeLabel]domain.JudgeName
@@ -24,8 +24,9 @@ type Converter struct {
 	currentPhase       domain.CompetitionPhase
 }
 
-func NewConverter() *Converter {
+func NewConverter(competitionID domain.CompetitionID) *Converter {
 	return &Converter{
+		competitionID:       competitionID,
 		participantMatching: map[domain.CompetitionParticipantID]domain.ParticipantID{},
 	}
 }

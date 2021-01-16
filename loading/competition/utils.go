@@ -1,4 +1,4 @@
-package loading
+package competition
 
 import (
 	"strings"

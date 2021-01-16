@@ -22,9 +22,6 @@ func GroupToTables(dataBlocks ...[]Data) Tables {
 			case ParticipantResult:
 				result.Results = append(result.Results, casted)
 
-			case Participant:
-				result.Participants = append(result.Participants, casted)
-
 			case Cross:
 				result.Crosses = append(result.Crosses, casted)
 
@@ -38,12 +35,10 @@ func GroupToTables(dataBlocks ...[]Data) Tables {
 }
 
 type Tables struct {
-	Competitions []Competition
-	Categories   []Category
-	Participants []Participant
-	Results      []ParticipantResult
-	Crosses      []Cross
-	Judges       []Judge
+	Categories []Category
+	Results    []ParticipantResult
+	Crosses    []Cross
+	Judges     []Judge
 }
 
 func (tables *Tables) Write(dir string) error {
@@ -67,15 +62,7 @@ func (tables *Tables) Write(dir string) error {
 		return writer.WriteAll(records)
 	}
 
-	if err := writeRecords("competitions", tables.Competitions); err != nil {
-		return err
-	}
-
 	if err := writeRecords("categories", tables.Categories); err != nil {
-		return err
-	}
-
-	if err := writeRecords("participants", tables.Participants); err != nil {
 		return err
 	}
 
