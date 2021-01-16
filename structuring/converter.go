@@ -133,21 +133,22 @@ func (c *Converter) consumePreFinalData(data prefinal.Data) []Data {
 	}
 
 	var result []Data
-	addCross := func(id domain.ParticipantID, label domain.JudgeLabel) {
-		result = append(result, Cross{
-			ParticipantID: id,
-			CompetitionID: c.competitionID,
-			JudgeName:     c.currentJudgesMapping[label],
-			CategoryID:    c.currentJNJCategory.ID,
-			Phase:         c.currentPhase,
-		})
-	}
 
 	for _, crosses := range data.Crosses {
-		id := c.participantMatching[crosses.CompetitionParticipantID]
+		participantID := c.participantMatching[crosses.CompetitionParticipantID]
+		labelSet := crosses.GetLabelSet()
 
-		for _, label := range crosses.Crosses {
-			addCross(id, label)
+		for label, judgeName := range c.currentJudgesMapping {
+			_, passed := labelSet[label]
+
+			result = append(result, Cross{
+				ParticipantID: participantID,
+				CompetitionID: c.competitionID,
+				JudgeName:     judgeName,
+				CategoryID:    c.currentJNJCategory.ID,
+				Phase:         c.currentPhase,
+				Passed:        passed,
+			})
 		}
 	}
 

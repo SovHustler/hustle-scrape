@@ -75,6 +75,7 @@ type Cross struct {
 	JudgeName     domain.JudgeName
 	CategoryID    domain.CategoryID
 	Phase         domain.CompetitionPhase
+	Passed        bool
 }
 
 func (c Cross) ToStrings() []string {
