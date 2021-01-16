@@ -19,9 +19,9 @@ type Converter struct {
 	participantMatching  map[domain.CompetitionParticipantID]domain.ParticipantID
 	currentJudgesMapping map[domain.JudgeLabel]domain.JudgeName
 
-	currentJudges     judges.Data
-	currentCategoryID domain.CategoryID
-	currentPhase      domain.CompetitionPhase
+	currentJudges      judges.Data
+	currentJNJCategory *category.JNJData
+	currentPhase       domain.CompetitionPhase
 }
 
 func NewConverter() *Converter {
@@ -37,11 +37,10 @@ func (c *Converter) Convert(data parsing.Data) []Data {
 
 	case category.Data:
 		if casted.JNJ != nil {
-			// TODO handle classic as well
-			c.consumeJNJCategoryData(casted.JNJ)
+			return c.consumeJNJCategoryData(casted.JNJ)
+		} else {
+			return c.consumeClassicCategoryData(casted.Classic)
 		}
-
-		return nil
 
 	case final.Data:
 		return nil // todo handle some way
@@ -72,8 +71,15 @@ func (c *Converter) consumeJudgesData(data judges.Data) []Data {
 	return nil
 }
 
+func (c *Converter) consumeClassicCategoryData(data *category.ClassicData) []Data {
+	// TODO handle classic division somehow
+
+	c.currentJNJCategory = nil
+	return nil
+}
+
 func (c *Converter) consumeJNJCategoryData(data *category.JNJData) []Data {
-	c.currentCategoryID = data.ID
+	c.currentJNJCategory = data
 
 	var result []Data
 	result = append(result, Category{
@@ -86,7 +92,7 @@ func (c *Converter) consumeJNJCategoryData(data *category.JNJData) []Data {
 	for _, j := range c.currentJudges.Judges {
 		result = append(result, Judge{
 			CompetitionID: c.competitionID,
-			CategoryID:    c.currentCategoryID,
+			CategoryID:    c.currentJNJCategory.ID,
 			Name:          j.Name,
 		})
 	}
@@ -100,13 +106,17 @@ func (c *Converter) consumePhaseData(data phase.Data) []Data {
 }
 
 func (c *Converter) consumePlaceData(data place.Data) []Data {
+	if c.currentJNJCategory == nil {
+		return nil
+	}
+
 	var result []Data
 	for _, r := range data.Results {
 		c.participantMatching[r.CompetitionParticipantID] = r.ParticipantID
 
 		result = append(result, ParticipantResult{
 			ParticipantID: r.ParticipantID,
-			CategoryID:    c.currentCategoryID,
+			CategoryID:    c.currentJNJCategory.ID,
 			PlaceRange: PlaceRange{
 				Lower: r.PlaceRange.Lower,
 				Upper: r.PlaceRange.Upper,
@@ -118,13 +128,17 @@ func (c *Converter) consumePlaceData(data place.Data) []Data {
 }
 
 func (c *Converter) consumePreFinalData(data prefinal.Data) []Data {
+	if c.currentJNJCategory == nil {
+		return nil
+	}
+
 	var result []Data
 	addCross := func(id domain.ParticipantID, label domain.JudgeLabel) {
 		result = append(result, Cross{
 			ParticipantID: id,
 			CompetitionID: c.competitionID,
 			JudgeName:     c.currentJudgesMapping[label],
-			CategoryID:    c.currentCategoryID,
+			CategoryID:    c.currentJNJCategory.ID,
 			Phase:         c.currentPhase,
 		})
 	}
