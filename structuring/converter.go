@@ -127,11 +127,7 @@ func (c *Converter) consumePreFinalData(data prefinal.Data) []Data {
 	for _, crosses := range data.Crosses {
 		id := c.participantMatching[crosses.CompetitionParticipantID]
 
-		for _, label := range crosses.FirstDanceCrosses {
-			addCross(id, label)
-		}
-
-		for _, label := range crosses.SecondDanceCrosses {
+		for _, label := range crosses.Crosses {
 			addCross(id, label)
 		}
 	}

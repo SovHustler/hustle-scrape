@@ -14,6 +14,5 @@ type Data struct {
 type ParticipantCrosses struct {
 	CompetitionParticipantID domain.CompetitionParticipantID
 
-	FirstDanceCrosses  []domain.JudgeLabel
-	SecondDanceCrosses []domain.JudgeLabel
+	Crosses []domain.JudgeLabel
 }

@@ -31,13 +31,11 @@ func (s *TechTestSuite) TestParser() {
 		Crosses: []ParticipantCrosses{
 			{
 				CompetitionParticipantID: "109",
-				FirstDanceCrosses:        []domain.JudgeLabel{"a", "b"},
-				SecondDanceCrosses:       []domain.JudgeLabel{"c", "d", "e"},
+				Crosses:                  []domain.JudgeLabel{"a", "b", "c", "d", "e"},
 			},
 			{
 				CompetitionParticipantID: "79",
-				FirstDanceCrosses:        []domain.JudgeLabel{},
-				SecondDanceCrosses:       []domain.JudgeLabel{},
+				Crosses:                  []domain.JudgeLabel{},
 			},
 		},
 	}, data.(Data))
