@@ -3,7 +3,6 @@ package judges
 import (
 	"testing"
 
-	"github.com/Sovianum/hustleScrape/domain"
 	"github.com/Sovianum/hustleScrape/parsing"
 	"github.com/stretchr/testify/suite"
 )
@@ -37,9 +36,9 @@ func (s *ParserTestSuite) TestParser() {
 	data := p.GetData()
 	s.EqualValues(Data{
 		MainJudge: "катунин павел",
-		Judges: map[domain.JudgeLabel]string{
-			"a": "катунин павел",
-			"в": "николаева екатерина",
+		Judges: []Judge{
+			{"a", "катунин павел"},
+			{"b", "николаева екатерина"},
 		},
 	}, data.(Data))
 }

@@ -8,12 +8,12 @@ import (
 
 	"github.com/Sovianum/hustleScrape/blocksplit"
 	"github.com/Sovianum/hustleScrape/parsing"
-	"github.com/Sovianum/hustleScrape/parsing/jnj/category"
+	"github.com/Sovianum/hustleScrape/parsing/category"
 	"github.com/Sovianum/hustleScrape/parsing/jnj/final"
 	"github.com/Sovianum/hustleScrape/parsing/jnj/phase"
 	"github.com/Sovianum/hustleScrape/parsing/jnj/place"
-	"github.com/Sovianum/hustleScrape/parsing/jnj/prefinal"
 	"github.com/Sovianum/hustleScrape/parsing/judges"
+	"github.com/Sovianum/hustleScrape/parsing/prefinal"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -54,5 +54,5 @@ func (s *ProcessorTestSuite) TestProcessWholePage() {
 	}
 
 	data := p.GetData()
-	s.Len(data, 47)
+	s.Len(data, 57)
 }

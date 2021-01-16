@@ -5,12 +5,12 @@ import (
 
 	"github.com/Sovianum/hustleScrape/domain"
 	"github.com/Sovianum/hustleScrape/parsing"
-	"github.com/Sovianum/hustleScrape/parsing/jnj/category"
+	"github.com/Sovianum/hustleScrape/parsing/category"
 	"github.com/Sovianum/hustleScrape/parsing/jnj/final"
 	"github.com/Sovianum/hustleScrape/parsing/jnj/phase"
 	"github.com/Sovianum/hustleScrape/parsing/jnj/place"
-	"github.com/Sovianum/hustleScrape/parsing/jnj/prefinal"
 	"github.com/Sovianum/hustleScrape/parsing/judges"
+	"github.com/Sovianum/hustleScrape/parsing/prefinal"
 )
 
 type Converter struct {
@@ -36,7 +36,12 @@ func (c *Converter) Convert(data parsing.Data) []Data {
 		return c.consumeJudgesData(casted)
 
 	case category.Data:
-		return c.consumeCategoryData(casted)
+		if casted.JNJ != nil {
+			// TODO handle classic as well
+			c.consumeJNJCategoryData(casted.JNJ)
+		}
+
+		return nil
 
 	case final.Data:
 		return nil // todo handle some way
@@ -67,7 +72,7 @@ func (c *Converter) consumeJudgesData(data judges.Data) []Data {
 	return nil
 }
 
-func (c *Converter) consumeCategoryData(data category.Data) []Data {
+func (c *Converter) consumeJNJCategoryData(data *category.JNJData) []Data {
 	c.currentCategoryID = data.ID
 
 	var result []Data
