@@ -116,8 +116,10 @@ func (c *Converter) consumePlaceData(data place.Data) []Data {
 		c.participantMatching[r.CompetitionParticipantID] = r.ParticipantID
 
 		result = append(result, ParticipantResult{
-			ParticipantID: r.ParticipantID,
-			CategoryID:    c.currentJNJCategory.ID,
+			ParticipantID:     r.ParticipantID,
+			CategoryID:        c.currentJNJCategory.ID,
+			CompetitionID:     c.competitionID,
+			TotalParticipants: c.currentJNJCategory.TotalCompetitors,
 			PlaceRange: PlaceRange{
 				Lower: r.PlaceRange.Lower,
 				Upper: r.PlaceRange.Upper,

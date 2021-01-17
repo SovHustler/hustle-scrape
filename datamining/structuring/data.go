@@ -50,15 +50,19 @@ func (p Participant) ToStrings() []string {
 }
 
 type ParticipantResult struct {
-	ParticipantID domain.ParticipantID
-	CategoryID    domain.CategoryID
-	PlaceRange    PlaceRange
+	ParticipantID     domain.ParticipantID
+	CategoryID        domain.CategoryID
+	CompetitionID     domain.CompetitionID
+	TotalParticipants int
+	PlaceRange        PlaceRange
 }
 
 func (p ParticipantResult) ToStrings() []string {
 	return []string{
 		string(p.ParticipantID),
 		string(p.CategoryID),
+		string(p.CompetitionID),
+		strconv.Itoa(p.TotalParticipants),
 		strconv.Itoa(p.PlaceRange.Lower),
 		strconv.Itoa(p.PlaceRange.Upper),
 	}
