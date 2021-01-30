@@ -1,6 +1,14 @@
 import pandas as pd
 
 
+def undersample_to_least_popular_judge(data: pd.DataFrame) -> pd.DataFrame:
+    min_judge_records = data.judge_name.value_counts().min()
+    judge_names = data.judge_name.unique()
+
+    dfs = [data[data.judge_name == judge_name].sample(min_judge_records) for judge_name in judge_names]
+    return pd.concat(dfs)
+
+
 def remove_not_popular_competitor_records(data: pd.DataFrame, min_records: int) -> pd.DataFrame:
     df = data.join(get_competitor_cross_counts(data), on="competitor_id")
     df = df[df.cross_counts >= min_records]
