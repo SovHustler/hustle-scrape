@@ -47,7 +47,7 @@ def get_diff_coef_data(coef_data: CoefData) -> CoefData:
     return CoefData(diffs, labels)
 
 
-def get_sorted_cross_based_model_coefs(reg: LinearRegression, data: pd.DataFrame) -> CoefData:
+def get_model_coefs(reg: LinearRegression, data: pd.DataFrame) -> CoefData:
     tuples = list(zip(reg.coef_, data.columns[:-1]))
 
     coefs = [tup[0] for tup in tuples if tup[1] != 'total_competitors']
