@@ -1,4 +1,36 @@
+import random
+
 import pandas as pd
+import typing
+
+
+def bootstrap_by_category_labels(data: pd.DataFrame, category_fraction: float, dfs_count: int, min_judge_crosses: int, random_state: int = 42) -> typing.List[pd.DataFrame]:
+    unique_labels = pd.Series(data.category_label.unique())
+
+    random.seed(random_state)
+
+    result = []
+    for i in range(10 * dfs_count):
+        random_state = random.randint(0, 1000000)
+        category_set = unique_labels.sample(frac=category_fraction, random_state=random_state)
+        index = data.category_label.isin(category_set)
+
+        df = data[index]
+
+        min_df_judge_crosses = get_min_judge_crosses(df)
+        if min_df_judge_crosses >= min_judge_crosses:
+            result.append(df)
+        else:
+            print("skipping %d as min judge crosses is %d (below %d)" % (i, min_df_judge_crosses, min_judge_crosses))
+
+        if len(result) >= dfs_count:
+            break
+
+    return result
+
+
+def get_min_judge_crosses(data: pd.DataFrame) -> int:
+    return data.judge_name.value_counts().min()
 
 
 def undersample_to_least_popular_judge(data: pd.DataFrame) -> pd.DataFrame:
@@ -42,8 +74,13 @@ def join_crosses_and_results(crosses_data: pd.DataFrame, results_data: pd.DataFr
 def enrich_crosses_df(crosses_data: pd.DataFrame) -> pd.DataFrame:
     crosses_data['syntethic_competitor_id'] = make_synthetic_competitor_ids(crosses_data.competitor_id)
     crosses_data['unique_id'] = make_unique_competition_id(crosses_data)
+    crosses_data['category_label'] = make_category_labels(crosses_data)
 
     return crosses_data
+
+
+def make_category_labels(crosses_data: pd.DataFrame) -> pd.Series:
+    return crosses_data.competition_id + crosses_data.category
 
 
 def make_unique_competition_id(crosses_data: pd.DataFrame) -> pd.Series:
